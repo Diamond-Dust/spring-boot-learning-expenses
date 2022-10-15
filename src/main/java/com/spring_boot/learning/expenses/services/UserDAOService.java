@@ -21,6 +21,9 @@ public class UserDAOService {
     }
 
     public User getUser(int id) {
+        if (id > users.size()) {
+            return null;
+        }
         return users.get(id);
     }
 

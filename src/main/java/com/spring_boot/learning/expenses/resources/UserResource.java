@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.spring_boot.learning.expenses.Exceptions.UserNotFoundException;
 import com.spring_boot.learning.expenses.beans.User;
 import com.spring_boot.learning.expenses.services.UserDAOService;
 
@@ -32,7 +33,11 @@ public class UserResource {
 
     @GetMapping("/user/{id}")
     public User getUser(@PathVariable int id) {
-        return userService.getUser(id);
+        User foundUser = userService.getUser(id);
+        if (foundUser == null) {
+            throw new UserNotFoundException("id: " + id);
+        }
+        return foundUser;
     }
 
     @PostMapping("/user")
