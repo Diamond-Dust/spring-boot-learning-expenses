@@ -1,6 +1,9 @@
 package com.spring_boot.learning.expenses.beans;
 
-import java.sql.Date;
+import java.util.Date;
+
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +21,7 @@ public class User {
     private String name;
     @Getter
     @Setter
+    @PastOrPresent
     private Date dateOfBirth;
 
     @Override
