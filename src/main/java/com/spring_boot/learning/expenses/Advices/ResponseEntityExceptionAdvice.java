@@ -4,8 +4,10 @@ import java.util.Date;
 
 import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,4 +30,10 @@ public class ResponseEntityExceptionAdvice extends ResponseEntityExceptionHandle
         ExceptionResponse exr = new ExceptionResponse(new Date(), ex.getMessage(), req.getDescription(false));
         return new ResponseEntity<Object>(exr, HttpStatus.NOT_FOUND);
     }
+    @Override  
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request)   
+    {  
+        ExceptionResponse exceptionResponse= new ExceptionResponse(new Date(), ex.getMessage(), ex.getBindingResult().toString());  
+        return new ResponseEntity<Object>(exceptionResponse, HttpStatus.BAD_REQUEST);  
+    }  
 }
