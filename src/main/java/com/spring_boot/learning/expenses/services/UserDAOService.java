@@ -1,6 +1,7 @@
 package com.spring_boot.learning.expenses.services;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -9,11 +10,12 @@ import com.spring_boot.learning.expenses.beans.User;
 
 @Component
 public class UserDAOService {
+    private static int nextIdToUse = 0;
     private static ArrayList<User> users = new ArrayList<User>();
 
     public User addUser(User user) {
         if (user.getId() == null)
-            user.setId(users.size());
+            user.setId(nextIdToUse++);
 
         boolean success = users.add(user);
         
@@ -21,10 +23,15 @@ public class UserDAOService {
     }
 
     public User getUser(int id) {
-        if (id > users.size()) {
-            return null;
+        User user = null;
+        Iterator<User> usersIterator = users.iterator();
+        while  (usersIterator.hasNext()) {
+            user = usersIterator.next();
+            if (user.getId() == id) {
+                break;
+            }
         }
-        return users.get(id);
+        return user;
     }
 
     public List<User> getUsers() {
@@ -32,7 +39,17 @@ public class UserDAOService {
     }
 
     public User updateUser(User user) {
-        User oldUser = users.get(user.getId());
+        if (user.getId() == null)
+            return null;
+
+        User oldUser = null;
+        Iterator<User> usersIterator = users.iterator();
+        while  (usersIterator.hasNext()) {
+            oldUser = usersIterator.next();
+            if (oldUser.getId() == user.getId()) {
+                break;
+            }
+        }
         if (oldUser != null)
             users.remove(oldUser);
         users.add(user);
@@ -40,9 +57,15 @@ public class UserDAOService {
     }
 
     public User deleteUser(int id) {
-        User oldUser = users.get(id);
-        if (oldUser != null)
-            users.remove(oldUser);
-        return oldUser;
+        User user = null;
+        Iterator<User> usersIterator = users.iterator();
+        while  (usersIterator.hasNext()) {
+            user = usersIterator.next();
+            if (user.getId() == id) {
+                usersIterator.remove();
+                break;
+            }
+        }
+        return user;
     }
 }
