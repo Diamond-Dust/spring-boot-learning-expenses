@@ -21,7 +21,7 @@ public class User {
     private String name;
     @Getter
     @Setter
-    @PastOrPresent
+    @PastOrPresent(message = "Date of birth must not be in the future.")
     private Date dateOfBirth;
 
     @Override
