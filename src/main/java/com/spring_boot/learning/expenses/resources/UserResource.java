@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -54,7 +56,11 @@ public class UserResource {
     }
 
     @DeleteMapping("/user/{id}")
-    public User deleteUser(@PathVariable int id) {
-        return userService.deleteUser(id);
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable int id) {
+        User deletedUser = userService.deleteUser(id);
+        if (deletedUser == null) {
+            throw new UserNotFoundException("id: " + id);
+        }
     }
 }
