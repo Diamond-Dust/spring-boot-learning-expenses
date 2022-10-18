@@ -3,7 +3,6 @@ package com.spring_boot.learning.expenses.beans;
 import java.util.Date;
 
 import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

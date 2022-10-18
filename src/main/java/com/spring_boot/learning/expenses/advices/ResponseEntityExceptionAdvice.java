@@ -1,8 +1,6 @@
-package com.spring_boot.learning.expenses.Advices;
+package com.spring_boot.learning.expenses.advices;
 
 import java.util.Date;
-
-import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.spring_boot.learning.expenses.Exceptions.UserNotFoundException;
 import com.spring_boot.learning.expenses.beans.ExceptionResponse;
+import com.spring_boot.learning.expenses.exceptions.UserNotFoundException;
 
 @ControllerAdvice
 @RestController

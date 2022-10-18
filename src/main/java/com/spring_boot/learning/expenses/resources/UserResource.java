@@ -6,7 +6,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,9 +21,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.spring_boot.learning.expenses.Exceptions.UserNotFoundException;
 import com.spring_boot.learning.expenses.beans.User;
+import com.spring_boot.learning.expenses.exceptions.UserNotFoundException;
 import com.spring_boot.learning.expenses.services.UserDAOService;
+
 
 @RestController
 @RequestMapping("/services-resources")
@@ -36,12 +38,15 @@ public class UserResource {
     }
 
     @GetMapping("/user/{id}")
-    public User getUser(@PathVariable int id) {
+    public EntityModel<User> getUser(@PathVariable int id) {
         User foundUser = userService.getUser(id);
         if (foundUser == null) {
             throw new UserNotFoundException("id: " + id);
         }
-        return foundUser;
+        EntityModel<User> resource = EntityModel.of(foundUser);
+        WebMvcLinkBuilder links = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getAllUsers());
+        resource.add(links.withRel("users"));
+        return resource;
     }
 
     @PostMapping("/user")

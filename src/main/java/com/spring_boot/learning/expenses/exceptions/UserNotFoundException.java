@@ -1,4 +1,4 @@
-package com.spring_boot.learning.expenses.Exceptions;
+package com.spring_boot.learning.expenses.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
