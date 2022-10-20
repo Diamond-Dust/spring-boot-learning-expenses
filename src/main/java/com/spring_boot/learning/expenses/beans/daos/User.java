@@ -1,4 +1,4 @@
-package com.spring_boot.learning.expenses.beans;
+package com.spring_boot.learning.expenses.beans.daos;
 
 import java.util.Date;
 

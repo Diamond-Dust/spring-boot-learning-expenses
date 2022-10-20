@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.spring_boot.learning.expenses.beans.User;
+import com.spring_boot.learning.expenses.beans.daos.User;
+import com.spring_boot.learning.expenses.beans.dtos.UserDTO;
 import com.spring_boot.learning.expenses.exceptions.UserNotFoundException;
+import com.spring_boot.learning.expenses.hateoas.assemblers.UserModelAssembler;
 import com.spring_boot.learning.expenses.services.UserDAOService;
 
 
@@ -31,22 +34,24 @@ import com.spring_boot.learning.expenses.services.UserDAOService;
 public class UserResource {
     @Autowired
     private UserDAOService userService;
+    @Autowired
+    private UserModelAssembler userModelAssembler;
 
     @GetMapping("/users")
-    public List<User> getAllUsers() {
-        return userService.getUsers();
+    public CollectionModel<UserDTO> getAllUsers() {
+        List<User> users = userService.getUsers();
+        CollectionModel<UserDTO> userDtos = userModelAssembler.toCollectionModel(users);
+        return userDtos;
     }
 
     @GetMapping("/user/{id}")
-    public EntityModel<User> getUser(@PathVariable int id) {
+    public UserDTO getUser(@PathVariable int id) {
         User foundUser = userService.getUser(id);
         if (foundUser == null) {
             throw new UserNotFoundException("id: " + id);
         }
-        EntityModel<User> resource = EntityModel.of(foundUser);
-        WebMvcLinkBuilder links = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getAllUsers());
-        resource.add(links.withRel("users"));
-        return resource;
+        UserDTO userDto = userModelAssembler.toModel(foundUser);
+        return userDto;
     }
 
     @PostMapping("/user")
@@ -57,9 +62,11 @@ public class UserResource {
     }
 
     @PutMapping("/user/{id}")
-    public User updateUser(@PathVariable int id, @Valid @RequestBody User user) {
+    public UserDTO updateUser(@PathVariable int id, @Valid @RequestBody User user) {
         user.setId(id);
-        return userService.updateUser(user);
+        User putUser = userService.updateUser(user);
+        UserDTO userDto = userModelAssembler.toModel(putUser);
+        return userDto;
     }
 
     @DeleteMapping("/user/{id}")

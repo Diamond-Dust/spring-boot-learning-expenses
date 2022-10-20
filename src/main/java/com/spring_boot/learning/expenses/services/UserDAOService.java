@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.spring_boot.learning.expenses.beans.User;
+import com.spring_boot.learning.expenses.beans.daos.User;
 
 @Component
 public class UserDAOService {
